@@ -43,6 +43,11 @@ var day = moment().format('DDD');
 // The name of the CSV file. This will change if --test is passed.
 var membersCsv = nconf.get('csv');
 
+/**
+ * Read a line from the members file for the current day.
+ *
+ * @returns {promise|*|Q.promise}
+ */
 function readLineFromFile() {
   var deferred = Q.defer();
   if (nconf.get('lastSuccess') === day) {
@@ -78,6 +83,12 @@ function readLineFromFile() {
   return deferred.promise;
 }
 
+/**
+ * Send mail to the member asking for prayer.
+ *
+ * @param member
+ * @returns {promise|*|Q.promise}
+ */
 function sendMail(member) {
   var deferred = Q.defer();
 
@@ -97,6 +108,12 @@ function sendMail(member) {
   return deferred.promise;
 }
 
+/**
+ * Send mail to the Matthews reminding them to pray for the member.
+ *
+ * @param member
+ * @returns {promise|*|Q.promise}
+ */
 function sendMailUs(member) {
   var deferred = Q.defer();
   var mailOptionsUs = {
@@ -119,16 +136,22 @@ function sendMailUs(member) {
   return deferred.promise;
 }
 
+/**
+ * Finish up, by storing today as a success, and then saving the file.
+ */
+function finish() {
+  nconf.set('lastSuccess', day);
+  nconf.save(function(err) {
+    if (err) {
+      console.error('Unable to save progress to disk!');
+      process.exit(1);
+    }
+    console.log('Saved progress to disk.');
+  });
+}
+
+// Read the line from the file, and then pass to the other functions.
 readLineFromFile()
   .then(sendMail)
   .then(sendMailUs)
-  .done(function () {
-    nconf.set('lastSuccess', day);
-    nconf.save(function(err) {
-      if (err) {
-        console.error('Unable to save progress to disk!');
-        process.exit(1);
-      }
-      console.log('Saved progress to disk.');
-    });
-  });
+  .done(finish);
