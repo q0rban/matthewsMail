@@ -1,9 +1,5 @@
 # Description
-This script will find the day of the year, extract that line from a file, parse the line
-into an e-mail address, first name and last name and then send an e-mail to that person.  The 
-script expects the input file to be comma delimited with just the three fields of e-mail  
-address, first name and last name.  It will also send an e-mail to the sender telling who to 
-be praying for.   
+This script will find the day of the year, extract that line from a file, parse the line into an e-mail address, first name and last name and then send an e-mail to that person.  The script expects the input file to be comma delimited with just the three fields of e-mail address, first name and last name.  It will also send an e-mail to the sender telling who to be praying for.   
 
 # Installation
 
